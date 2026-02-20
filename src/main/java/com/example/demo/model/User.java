@@ -1,15 +1,27 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+
+@Entity
 public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String name;
     private int age;
 
-    public User() {}
+    public User() {
+    }
 
     public User(String name, int age) {
         this.name = name;
         this.age = age;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {

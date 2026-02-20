@@ -1,35 +1,41 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.UserRequest;
-import com.example.demo.model.User;
-import org.springframework.stereotype.Service;
 import com.example.demo.exception.UserNotFoundException;
+import com.example.demo.model.User;
+import com.example.demo.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class UserService {
 
-    private final List<User> users = new ArrayList<>();
+    private final UserRepository userRepository;
+
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     // CREATE
     public User createUser(UserRequest request) {
-        User user = new User(request.getName(), request.getAge());
-        users.add(user);
-        return user;
+
+        User user = new User();
+        user.setName(request.getName());
+        user.setAge(request.getAge());
+
+        return userRepository.save(user);
     }
 
     // READ ALL
     public List<User> getAllUsers() {
-        return users;
+        return userRepository.findAll();
     }
 
     // READ BY NAME
     public User getUserByName(String name) {
-        return users.stream()
-                .filter(u -> u.getName().equalsIgnoreCase(name))
-                .findFirst()
+
+        return userRepository.findByNameIgnoreCase(name)
                 .orElseThrow(() ->
                         new UserNotFoundException("User not found with name: " + name)
                 );
@@ -37,26 +43,19 @@ public class UserService {
 
     // DELETE
     public void deleteUser(String name) {
-        boolean removed = users.removeIf(u -> u.getName().equalsIgnoreCase(name));
-        if (!removed) {
-            throw new UserNotFoundException("User not found with name: " + name);
-        }
+
+        User user = getUserByName(name);
+        userRepository.delete(user);
     }
 
     // UPDATE
     public User updateUser(String name, UserRequest request) {
 
-        User user = users.stream()
-                .filter(u -> u.getName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElseThrow(() ->
-                        new UserNotFoundException("User not found with name: " + name)
-                );
+        User user = getUserByName(name);
 
         user.setName(request.getName());
         user.setAge(request.getAge());
 
-        return user;
+        return userRepository.save(user);
     }
-
 }
