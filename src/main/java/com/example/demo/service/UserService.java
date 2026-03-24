@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
+@Service    
 public class UserService {
 
     private final UserRepository userRepository;
@@ -19,11 +19,7 @@ public class UserService {
 
     // CREATE
     public User createUser(UserRequest request) {
-
-        User user = new User();
-        user.setName(request.getName());
-        user.setAge(request.getAge());
-
+        User user = new User(request.getName(), request.getAge());
         return userRepository.save(user);
     }
 
