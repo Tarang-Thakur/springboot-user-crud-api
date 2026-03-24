@@ -1,19 +1,18 @@
 package com.example.demo.dto;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class UserRequest {
 
-    @NotBlank(message = "Name must not be empty")
+    @NotBlank(message = "Name cannot be empty")
     private String name;
 
+    @NotNull(message = "Age is required")
     @Min(value = 1, message = "Age must be greater than 0")
-    @Max(value = 120, message = "Age must be less than or equal to 120")
-    private int age;
+    private Integer age;
 
-    // getters & setters
     public String getName() {
         return name;
     }
@@ -22,11 +21,11 @@ public class UserRequest {
         this.name = name;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
-    public void setAge(int age) {
+    public void setAge(Integer age) {
         this.age = age;
     }
 }
